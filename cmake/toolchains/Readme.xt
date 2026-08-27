@@ -1,0 +1,3 @@
+***** Toolchains *****
+Add toolchain file each time there is a new platform.
+Invoke toolchain file by setting CMAKE_TOOLCHAIN_FILE.
