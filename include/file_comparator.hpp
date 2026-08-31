@@ -1,5 +1,5 @@
 #pragma once
-#include <unordered_set>
+#include <deque>
 #include "file_compare_buffer.hpp"
 
 class FileComparator 
@@ -16,5 +16,5 @@ private:
     std::shared_ptr<FileCompareBuffer> m_compareBuffer;
 
     // The list of duplicate files.
-    std::unordered_set<std::vector<std::filesystem::path>> dupList;
+    std::deque<std::vector<std::filesystem::path>> dupList;
 };
