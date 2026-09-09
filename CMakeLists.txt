@@ -8,6 +8,16 @@ include(helpers)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Hash library
+include(FetchContent)
+FetchContent_Declare(
+    xxhash
+    GIT_REPOSITORY https://github.com/Cyan4973/xxHash.git
+    GIT_TAG        v0.8.3     
+)
+
+FetchContent_MakeAvailable(xxhash)
+
 # ---- Library: the file reader lib ----
 add_library(file_reader_lib
     source/file_reader.cpp
@@ -20,7 +30,10 @@ add_library(file_reader_lib
 target_include_directories(file_reader_lib PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
+    ${xxhash_SOURCE_DIR}
 )
+
+target_link_libraries(file_reader_lib PRIVATE utilities_lib)
 
 project_set_target_warnings(file_reader_lib)
 

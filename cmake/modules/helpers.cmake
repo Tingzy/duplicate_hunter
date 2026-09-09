@@ -4,6 +4,7 @@
 # build.
  
 # Enables a sensible, portable set of compiler warnings on <target>.
+add_compile_definitions(XXH_INLINE_ALL)
 
 function(project_set_target_warnings target)
     if (MSVC)

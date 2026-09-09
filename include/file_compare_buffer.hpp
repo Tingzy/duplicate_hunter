@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <filesystem>
 #include <mutex>
+#include <forward_list>
 
 class FileCompareBuffer {
 
@@ -41,10 +42,13 @@ public:
 
     // Choose a hash value (at fileMapByHash.begin()).
     // If no duplicate, remove from fileMapByHash, if duplicates exist, add all to a vector, return the vector and remove all from fileMapByHash.
-    // \return a vector of files, if there is more than 1 file with that same hash value.
-    std::vector<std::filesystem::path> getSameHashBucket();
+    // \return a list of files, if there is more than 1 file with that same hash value.
+    // Why list? FileComparator will need to check this list again and remove the ones that are not really dupes.
+    // Needs size(), needs random access. Need remove in the middle of the data structure. 
+    std::forward_list<std::filesystem::path> getSameHashBucket();
 
 private:
+    // Compare buffer does not need a flag to indicate that all files have been added to the buffer because the buffer will be fully populated before processing begins.
     // Mutex to protect access to the shared buffer.
     std::mutex compareBufferMutex;
 

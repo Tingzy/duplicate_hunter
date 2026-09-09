@@ -15,6 +15,8 @@ public:
 
     std::filesystem::path getFile();
 
+    void isDone();
+
     //Copy constructor.
     FileProcessBuffer(const FileProcessBuffer&) = delete;
 
@@ -35,4 +37,7 @@ private:
 
     // Deque to store the file paths for processing.
     std::deque<std::filesystem::path> m_fileBuffer;
+
+    // Flag to indicate that all files have been added to the buffer.
+    bool m_Done = false; 
 };

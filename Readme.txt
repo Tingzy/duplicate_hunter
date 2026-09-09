@@ -9,6 +9,7 @@ FileCompareBuffer: the shared buffer for the FileComparator threads.
 FileReader runs first, because FileComparator can only check uniqueness of files when the file list is complete.
 FileReader: 1 thread reading from the dir and add to a deque, while other threads hash and put the hashed file to FileCompareBuffer.
 FileComparator runs on multiple thread. Each pop 1 elements from the map, check uniqueness, return result.
+Hash Algorithm from https://github.com/Cyan4973/xxHash.git
 
 **** Build ****
 On Windows:

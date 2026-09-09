@@ -1,6 +1,7 @@
 #include "file_compare_buffer.hpp"
 
-size_t FileCompareBuffer::getBucketOccupiedCount() const {
+size_t FileCompareBuffer::getBucketOccupiedCount() const 
+{
     size_t count = 0;
     for (size_t i = 0; i < fileMapByHash.bucket_count(); ++i) {
         if (fileMapByHash.bucket_size(i) > 0) {
@@ -10,19 +11,23 @@ size_t FileCompareBuffer::getBucketOccupiedCount() const {
     return count;
 }
 
-size_t FileCompareBuffer::getFileCount() const {
+size_t FileCompareBuffer::getFileCount() const 
+{
     return fileMapByHash.size();
 }
 
-void FileCompareBuffer::addFile(size_t hashValue, const std::filesystem::path& filePath) {
+void FileCompareBuffer::addFile(size_t hashValue, const std::filesystem::path& filePath)
+{
     std::lock_guard<std::mutex> lock(compareBufferMutex);
     fileMapByHash.insert({hashValue, filePath});
     compareBufferCv.notify_one();
 }
 
-std::vector<std::filesystem::path> FileCompareBuffer::getSameHashBucket() {
-    std::vector<std::filesystem::path> sameHashVector;
-    std::lock_guard<std::mutex> lock(compareBufferMutex);
+std::forward_list<std::filesystem::path> FileCompareBuffer::getSameHashBucket() 
+{
+    std::forward_list<std::filesystem::path> sameHashList;
+    std::unique_lock<std::mutex> lock(compareBufferMutex);
+    compareBufferCv.wait(lock, [this] { return !fileMapByHash.empty();});
 
     // Pop the unique-hash files out of the map until iterator returns a non-unique hash. 
     auto it = fileMapByHash.begin();
@@ -38,13 +43,14 @@ std::vector<std::filesystem::path> FileCompareBuffer::getSameHashBucket() {
         auto range = fileMapByHash.equal_range(it->first);
         for (auto itEquRange = range.first; itEquRange != range.second; ++itEquRange)
         {
-            sameHashVector.push_back(itEquRange->second);
+            sameHashList.push_front(itEquRange->second);
         }
 
         fileMapByHash.erase(it->first);
         break;
     }
 
-    return sameHashVector;
+    return sameHashList;
 }
+
 
