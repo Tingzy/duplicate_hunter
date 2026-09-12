@@ -21,6 +21,7 @@ void FileComparator::saveDupe()
     auto iter = dupes.begin();
     while (iter != dupes.end())
     {
+        std::unique_lock<std::mutex> lock(dupeListMutex);
         for (auto& bucket : dupeList)
         {
             // Compare *iter with bucket.front().
@@ -38,4 +39,9 @@ void FileComparator::saveDupe()
         dupeList.push_back(newList);
         ++iter;
     }
+}
+
+bool FileComparator::bufferEmpty() const
+{
+    return m_compareBuffer->getFileCount() == 0;
 }

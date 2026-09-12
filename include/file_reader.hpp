@@ -26,6 +26,10 @@ public:
     // \return A shared pointer to the fileCompareBuffer.
     std::shared_ptr<FileCompareBuffer> getCompareBuffer() const;
 
+    // Check if the fileCompareBuffer is empty.
+    // \return true if the fileCompareBuffer is empty, false otherwise.
+    bool bufferEmpty() const;
+
 private:
 
     // The buffer to store the file paths for further processing (hashing and comparison).

@@ -62,3 +62,8 @@ std::shared_ptr<FileCompareBuffer> FileReader::getCompareBuffer() const
 {
     return m_compareBuffer;
 }
+
+bool FileReader::bufferEmpty() const
+{
+    return m_compareBuffer->getFileCount() == 0;
+}

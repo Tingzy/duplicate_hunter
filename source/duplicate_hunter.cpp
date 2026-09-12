@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < 4; ++i) {
         hashThreads.emplace_back([&reader]() {
-            while (true) {
+            while (!reader.bufferEmpty()) {
                 try {
                     reader.addFileForComparison();
                 } catch (const std::exception& e) {
@@ -51,7 +51,17 @@ int main(int argc, char *argv[])
     // Now from the buffer which contains the buckets of files with the same hash, just go through all again and do a byte-by-byte comparison.
     FileComparator comparator{reader.getCompareBuffer()};
 
-    std::vector<std::thread> compareThreads;
+    while (comparator.bufferEmpty() == false)
+    {
+        try {
+            comparator.saveDupe();
+        } catch (const std::exception& e) {
+            std::cout << "Error in main thread: " << e.what() << std::endl;
+            return -1;
+        }
+    }
+
+    /*std::vector<std::thread> compareThreads;
 
     for (int i = 0; i < 4; ++i) {
         compareThreads.emplace_back([&comparator]() {
@@ -68,7 +78,7 @@ int main(int argc, char *argv[])
 
     for (auto& thread : compareThreads) {
         thread.join();
-    }
+    }*/
 
     return 0;
 }             

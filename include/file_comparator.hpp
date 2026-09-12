@@ -16,6 +16,8 @@ public:
     // Save duplicate. to dupList.
     void saveDupe();
 
+    bool bufferEmpty() const;
+
 private:
     // The buffer to read and compare.
     std::shared_ptr<FileCompareBuffer> m_compareBuffer;
@@ -24,4 +26,8 @@ private:
     // A stack of lists that contain duplicate files. Each vector is a set of duplicate files.
     // Why deque? Need removing in the middle in rare case. No order needed. 
     std::deque<std::forward_list<std::filesystem::path>> dupeList;
+
+    std::mutex dupeListMutex;
+
+    std::condition_variable dupeListCv;
 };
