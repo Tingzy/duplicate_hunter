@@ -16,7 +16,12 @@ public:
     // Save duplicate. to dupList.
     void saveDupe();
 
+    // Check if the compare buffer is empty.
+    // \return true if the compare buffer is empty, false otherwise.
     bool bufferEmpty() const;
+
+    // Print the list of duplicate files.
+    void printDupeList();
 
 private:
     // The buffer to read and compare.

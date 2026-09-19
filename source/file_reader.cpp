@@ -49,6 +49,10 @@ void FileReader::addFileForComparison()
     {
         m_compareBuffer->addFile(hashFunction(filePath), filePath);
     }
+    else
+    {
+        m_prepareBufferDone = true;;
+    }
 }
 
 size_t FileReader::hashFunction(const fs::path& filePath) 
@@ -66,4 +70,9 @@ std::shared_ptr<FileCompareBuffer> FileReader::getCompareBuffer() const
 bool FileReader::bufferEmpty() const
 {
     return m_compareBuffer->getFileCount() == 0;
+}
+
+bool FileReader::isBufferDone() const
+{
+    return m_prepareBufferDone;
 }

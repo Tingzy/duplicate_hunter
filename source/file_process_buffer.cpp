@@ -1,4 +1,5 @@
 #include "file_process_buffer.hpp"
+#include <iostream>
 
 void FileProcessBuffer::addFile(const std::filesystem::path& filePath) 
 {

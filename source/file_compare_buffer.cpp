@@ -52,5 +52,3 @@ std::forward_list<std::filesystem::path> FileCompareBuffer::getSameHashBucket()
 
     return sameHashList;
 }
-
-
